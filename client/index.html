@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3A3AF0" />
+    <title>Rallie: live polls and Q&amp;A</title>
+    <meta
+      name="description"
+      content="Run live polls and audience Q&A. People join from their phones with a code or a QR scan, and results update as votes arrive."
+    />
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233A3AF0'/%3E%3Cpath d='M11 24V8h6.5a4.5 4.5 0 0 1 0 9H11M17 17l5 7' fill='none' stroke='%23FFC226' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+  />
+    <!-- Fonts load from Google Fonts. If they are unreachable the CSS falls back to system fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply the saved (or system) theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('rallie.theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

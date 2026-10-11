@@ -1,0 +1,59 @@
+name: rallie
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  server:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      MONGO_URI: mongodb://mongo:27017/rallie
+      JWT_SECRET: ${JWT_SECRET:-}
+      SEED_DEMO: ${SEED_DEMO:-true}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # nginx serves the built React app and proxies /api and /socket.io to the server,
+  # so the browser only ever talks to one origin (no CORS, one port to expose).
+  web:
+    build: ./client
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+
+  # Optional public HTTPS link without opening router ports:
+  #   docker compose --profile tunnel up -d
+  # Needs TUNNEL_TOKEN in .env (Cloudflare Zero Trust -> Networks -> Tunnels).
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    profiles: ["tunnel"]
+    depends_on:
+      - web
+
+volumes:
+  mongo-data:
