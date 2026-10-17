@@ -65,7 +65,7 @@ An ordinary web request is a one-time exchange in which the browser asks and the
 
 ### 4.7 Docker, Docker Compose and nginx
 
-Docker packages an application together with everything it needs to run, so it behaves the same on any computer. Docker Compose starts several containers together. Here, it runs three: the database, the Node.js server, and an nginx web server. nginx serves the built front end and forwards requests to the server. As a result, the browser communicates with a single address, which removes the need for cross-origin configuration. This allows the lecturer to run the entire system with one command and without installing Node.js or MongoDB.
+Docker packages an application together with everything it needs to run, so it behaves the same on any computer. Docker Compose starts several containers together. Here, it runs three: the database, the Node.js server, and an nginx web server. nginx serves the built front end and forwards requests to the server. As a result, the browser communicates with a single address, which removes the need for cross-origin configuration. This allows the user to run the entire system with one command and without installing Node.js or MongoDB.
 
 ### 4.8 Testing and Continuous Integration
 
